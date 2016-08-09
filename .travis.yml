@@ -6,4 +6,4 @@ script:
 install:
   - npm install -g firebase-tools
 after_success:
-  - firebase deploy --email fabio.dieguez@gmail.com --password eAdmin.9
+  - firebase deploy --email ${FIREBASE_USERNAME} --password ${FIREBASE_PASSWORD}
