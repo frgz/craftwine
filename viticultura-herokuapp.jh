@@ -1,0 +1,153 @@
+application { 
+  config { 
+    baseName viticultura
+    packageName com.grafenonet.agro.viticultura
+    buildTool maven
+    authenticationType jwt
+    cacheProvider ehcache
+    clientFramework react
+    languages [es, en]
+    nativeLanguage es
+  }
+  entities *
+  dto * with mapstruct
+  service * with serviceClass
+  paginate * with pagination
+}
+
+entity Municipio {
+	codigo String,
+    nombre String
+}
+
+entity Provincia {
+	codigo String,
+    nombre String
+}
+
+entity Direccion {
+	direccion String,
+    localidad String,
+    codigoPostal String
+}
+
+entity Variedad {
+	nombre String
+}
+
+entity SistemaRiego {
+	codigo String,
+    nombre String
+}
+
+enum TipoCalidad {
+	DOP, IXP
+}
+
+entity Calidad {
+	nombre String
+    tipo TipoCalidad,
+}
+
+entity Bodega {
+	nombre String,
+    contacto String,
+    telefono String,
+    email String,
+    web String
+}
+
+entity Explotacion {
+	nombre String,
+    nif String
+}
+
+entity Parcela {
+	nombre String,
+    poligono String,
+    parcela String,
+    recinto String,
+    superficie Decimal
+}
+
+entity Titular {
+	nombre String,
+    apellidos String,
+    nif String,
+    telefono String,
+    email String
+    representante Boolean
+}
+
+entity Maquinaria {
+	marca String,
+    modelo String,
+    matricula String,
+    fechaCompra Date
+}
+
+entity Edificio {
+	nombre String
+}
+
+entity TratamientoFitosanitario {
+	fecha Date
+}
+
+entity Recoleccion {
+	fecha Date,
+    cantidad Integer,
+    grado Decimal,
+    documento String
+}
+
+entity Dinero {
+	fecha Date,
+    importe Decimal,
+    documento String
+}
+
+relationship OneToOne {
+	Direccion to Calidad,
+    Direccion to Bodega,
+	Direccion to Explotacion,
+  	Direccion to Titular
+}
+
+// defining multiple OneToMany relationships with comments
+relationship ManyToOne {
+	Bodega{calidad} to Calidad,
+    Explotacion{calidad} to Calidad,
+	Municipio{provincia} to Provincia,
+	Titular{explotacion} to Explotacion,
+	Parcela{explotacion} to Explotacion,
+    Maquinaria{explotacion} to Explotacion,
+    Edificio{explotacion} to Explotacion,
+    Parcela{variedadPrincipal} to Variedad,
+    Parcela{variedadSecundaria} to Variedad,
+    Parcela{sistemaRiego} to SistemaRiego,
+    Recoleccion{parcela} to Parcela,
+    Recoleccion{variedad} to Variedad,
+    Recoleccion{bodega} to Bodega,
+    TratamientoFitosanitario{parela} to Parcela,
+    Dinero{explotacion} to Explotacion
+}
+
+relationship OneToMany {
+	Direccion{municipio} to Municipio{direccion}
+}
+
+//relationship ManyToMany {
+//}
+
+// Set pagination options
+paginate all with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
